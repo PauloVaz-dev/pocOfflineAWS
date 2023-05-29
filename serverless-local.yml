@@ -1,0 +1,171 @@
+service: messaging-schedule-service
+frameworkVersion: "3"
+useDotenv: true
+provider:
+  name: aws
+  runtime: nodejs14.x
+  memorySize: 256
+  stage: ${opt:stage, 'dev'}
+  region: sa-east-1
+  stackName: mensageria
+  apiName: "[MIDWAY] Messages - Schedule"
+  accountId: "000000000000"
+
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - lambda:InvokeFunction
+            - lambda:InvokeAsync
+            - s3:*
+            - sqs:GetQueueUrl
+            - sqs:GetQueueAttributes
+            - sqs:SendMessage
+            - sqs:ListQueues
+            - sqs:CreateQueue
+            - sqs:DeleteQueue
+            - sqs:ReceiveMessage
+            - sqs:DeleteMessage
+            - dynamodb:PutItem
+            - dynamodb:ListStreams
+            - dynamodb:DescribeTable
+            - dynamodb:UpdateItem
+            - dynamodb:GetItem
+            - dynamodb:GetRecords
+            - dynamodb:GetShardIterator
+          Resource:
+            [
+              'arn:aws:s3:::${env:S3_BUCKET_FILE_CSV}/*',
+              'arn:aws:sqs:${env:REGION}:${env:AWS_ACCOUNT_ID}:${env:SQS_MESSAGING_SCHEDULE_EVENT}',
+              'arn:aws:sqs:${env:REGION}:${env:AWS_ACCOUNT_ID}:${env:SQS_MESSAGING_SMS}',
+              'arn:aws:dynamodb:${env:REGION}:${env:AWS_ACCOUNT_ID}:table/${env:DYNAMO_SCHEDULE_TABLE}',
+            ]
+
+plugins:
+  - serverless-offline-s3
+  - serverless-offline-sqs
+  - serverless-plugin-typescript
+  - serverless-offline-dynamodb-streams  
+  - serverless-dotenv-plugin
+  - serverless-plugin-include-dependencies
+  - serverless-plugin-common-excludes
+  - serverless-offline
+
+package:
+  excludeDevDependencies: true
+
+resources:
+  Resources:
+    LocalBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: local-bucket
+
+    SqsMessagingScheduleEvent:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${env:SQS_MESSAGING_SCHEDULE_EVENT}
+
+    DynamoTableScheduleEventsJobs:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: 'schedule-events-jobs-ttl'
+        StreamSpecification:
+          StreamViewType: OLD_IMAGE
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        TimeToLiveSpecification:
+          AttributeName: ttl
+          Enabled: true
+        BillingMode: PAY_PER_REQUEST
+
+    MensageriaScheduleCsvs:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${env:S3_BUCKET_FILE_CSV}
+    GatewayResponseBadRequestBody:
+      ${file(.serverless-configuration/resources/responses/bad-request.yml)}
+
+custom:
+  
+  serverless-offline-sqs:    
+    autoCreate: true                 # create queue if not exists
+    apiVersion: '2012-11-05'
+    endpoint: http://0.0.0.0:9324
+    region: sa-east-1
+    accessKeyId: root
+    secretAccessKey: root
+    skipCacheInvalidation: false
+  
+  serverless-offline-s3:
+    endpoint: http://127.0.0.1:9000
+    region: sa-east-1
+    accessKey: local
+    secretKey: locallocal
+
+  serverless-offline-dynamodb-streams:
+    apiVersion: '2013-12-02'
+    endpoint: http://127.0.0.1:8000
+    region: sa-east-1
+    accessKeyId: local
+    secretAccessKey: locallocal
+    skipCacheInvalidation: false
+    readInterval: 500
+
+functions:
+  sqsHandlerEvents:
+    handler: src/handler/sqsHandler.events
+    events:
+      - sqs: arn:aws:sqs:region:XXXXXX:messaging-schedule-events
+
+  sqsHandlerCreate:
+    handler: src/handler/sqsHandler.create
+    events:
+      - http:
+          path: /v1/enqueue
+          method: post
+
+  #Criar
+  # Obs.: valide se o bucket existe, se não existir, o plugin s3 não vai subir e não dar nenhum erro 
+  s3Create:
+    handler: src/handler/s3Handler.event
+    events:
+      - s3: 
+          bucket: mensageria-schedule-csv
+          event:  s3:ObjectCreated:Put
+  #Delete
+  # Obs.: valide se o bucket existe, se não existir, o plugin s3 não vai subir e não dar nenhum erro 
+  s3Delete:
+    handler: src/handler/s3Handler.event
+    events:
+      - s3: 
+          bucket: mensageria-schedule-csv
+          event:  s3:ObjectRemoved:Delete
+  
+  dynamoCreate:
+    handler: src/handler/dynamoHandler.create
+    events:
+      - http:
+          path: /v1/dynanmo
+          method: post
+
+  # Obs.: valide se a tabela existe, se não existir o plugin dynamo não vai subir e não dar nenhum erro 
+  dynamoEvent:
+    handler: src/handler/dynamoHandler.event
+    events:
+      - stream: 
+          enabled: true
+          type: dynamodb
+          tableName: schedule-events-jobs-ttl
+  
+  rdsCreate:
+    handler: src/handler/rdsHandler.create
+    events:
+      - http:
+          path: /v1/rds
+          method: post

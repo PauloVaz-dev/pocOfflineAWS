@@ -1,0 +1,7 @@
+Type: 'AWS::ApiGateway::GatewayResponse'
+Properties:
+  RestApiId: 
+    Ref: 'ApiGatewayRestApi'
+  ResponseType: BAD_REQUEST_BODY
+  ResponseTemplates:
+    application/json: '{"message":"$context.error.validationErrorString"}'

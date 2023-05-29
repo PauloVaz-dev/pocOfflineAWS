@@ -1,0 +1,48 @@
+{
+	"additionalProperties": false,
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"properties": {
+    "channel": {
+			"type": "string",
+			"enum": [
+        "SMS"
+      ]
+		},
+		"originId": {
+			"type": "string"
+
+		},
+    "start": {
+			"type": "string",
+      "format": "date-time"
+		},
+    "interval": {
+      "type": "object",
+      "properties": {
+        "end": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["DAYS", "HOURS"
+          ]
+        },
+        "value": {
+          "type": "number"
+        }
+      },
+      "required": ["end", "type", "value"]
+    },
+    "fileRef": {
+			"type": "string",
+      "pattern": ".+(.csv)"
+		}
+	},
+	"required": [
+		"originId",
+    "channel",
+    "start",
+    "fileRef"
+	]
+}
