@@ -1,4 +1,4 @@
-### O projeto tem o intuito de simular os servivos da AWS SQS, Dynamo, S3, RDS, Redis com uso do framework serverless. Minimizando os custos e aumentando produtividade.
+### O projeto tem o intuito de simular os serviços da AWS SQS, Dynamo, S3, RDS, Redis com uso do framework serverless. Minimizando os custos e aumentando produtividade.
 
 ```bash
  #Subir os containers
