@@ -11,37 +11,6 @@ provider:
   apiName: "[MIDWAY] Messages - Schedule"
   accountId: "000000000000"
 
-  iam:
-    role:
-      statements:
-        - Effect: "Allow"
-          Action:
-            - lambda:InvokeFunction
-            - lambda:InvokeAsync
-            - s3:*
-            - sqs:GetQueueUrl
-            - sqs:GetQueueAttributes
-            - sqs:SendMessage
-            - sqs:ListQueues
-            - sqs:CreateQueue
-            - sqs:DeleteQueue
-            - sqs:ReceiveMessage
-            - sqs:DeleteMessage
-            - dynamodb:PutItem
-            - dynamodb:ListStreams
-            - dynamodb:DescribeTable
-            - dynamodb:UpdateItem
-            - dynamodb:GetItem
-            - dynamodb:GetRecords
-            - dynamodb:GetShardIterator
-          Resource:
-            [
-              'arn:aws:s3:::${env:S3_BUCKET_FILE_CSV}/*',
-              'arn:aws:sqs:${env:REGION}:${env:AWS_ACCOUNT_ID}:${env:SQS_MESSAGING_SCHEDULE_EVENT}',
-              'arn:aws:sqs:${env:REGION}:${env:AWS_ACCOUNT_ID}:${env:SQS_MESSAGING_SMS}',
-              'arn:aws:dynamodb:${env:REGION}:${env:AWS_ACCOUNT_ID}:table/${env:DYNAMO_SCHEDULE_TABLE}',
-            ]
-
 plugins:
   - serverless-offline-s3
   - serverless-offline-sqs
