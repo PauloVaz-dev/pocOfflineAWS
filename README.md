@@ -1,7 +1,9 @@
+### Projeto simula SQS, Dynamo, S3, RDS, Redis
 
 
 ```bash
  #Subir os containers
+cd docker
 docker-compose up 
 
 #Validar se containers estão funcionado
