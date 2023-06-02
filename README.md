@@ -2,7 +2,7 @@
 
 ```bash
 
-# Criar a rede para o container
+# Criar a rede para o container - Não é obrigatório - Entrou em conflito com a rede 172.18
 docker network create --driver=bridge --subnet=192.168.10.0/24 br0
 
 #Subir os containers
@@ -126,7 +126,7 @@ curl --location 'http://localhost:3000/local/v1/dynanmo' \
 
 ## Simulando o envio de uma mensagem para o dynamo via CLI
 ```bash
-aws dynamodb put-item --endpoint-url=http://127.0.0.1:8000 --table-name schedule-events-jobs-ttl --item '{ "id": {"S": "78224157-e580-4396-ac58-1b681a3cf519" } }'
+aws dynamodb put-item --endpoint-url=http://127.0.0.1:8000 --table-name my-dynamo --item '{ "id": {"S": "78224157-e580-4396-ac58-1b681a3cf519" } }'
 ```
 
 
