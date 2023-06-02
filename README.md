@@ -9,7 +9,6 @@ docker network create --driver=bridge --subnet=192.168.10.0/24 br0
 cd docker
 docker-compose up 
 
-
 #Validar se containers estão funcionado
 docker ps 
 
@@ -40,21 +39,21 @@ aws dynamodb --endpoint-url http://127.0.0.1:8000 create-table \
 #Ativo o ttl   
 aws dynamodb --endpoint-url=http://127.0.0.1:8000 update-time-to-live --table-name my-dynamo --time-to-live-specification Enabled=true,AttributeName=ttl --profile default
 
-#Listar tabelas
+# List tables
 aws dynamodb --endpoint-url=http://127.0.0.1:8000 list-tables
 
 #Listar se tem registros
 aws dynamodb --endpoint-url=http://127.0.0.1:8000  scan --table-name my-dynamo
 
-#Deletar table
+# Delete table
 aws dynamodb --endpoint-url=http://127.0.0.1:8000 delete-table \
          --table-name my-dynamo
 
-#Criar queues
+# Create queues
 aws sqs --endpoint-url=http://127.0.0.1:9324 create-queue \
             --queue-name my-sqs 
 
-#Listar a queues
+# List queues
 aws --endpoint-url=http://127.0.0.1:9324 sqs list-queues
 
 # Create bucket
@@ -69,7 +68,7 @@ aws --endpoint-url=http://127.0.0.1:9000 s3 ls s3://my-bucket
 # Copy local object to bucket
 aws --endpoint-url=http://127.0.0.1:9000 s3 cp package.json s3://my-bucket/
 
-#Remover
+# Remover
 aws --endpoint-url=http://127.0.0.1:9000 s3 rm s3://my-bucket/package.json
 
 ```

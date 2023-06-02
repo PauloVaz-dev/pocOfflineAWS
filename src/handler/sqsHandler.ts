@@ -5,12 +5,14 @@ import { SendMessageCommand } from '@aws-sdk/client-sqs'
 import { sqsClient } from '../commons/aws'
 
 export const events = async (records: any): Promise<HttpResponse> => {
-  console.log('Lambda events ')
+  console.log(`\x1b[33m Lambda events! \x1b[0m`)
   try {
     for (const { body } of records.Records) {
       const record = JSON.parse(body)
 
-      console.log('message received from SQS', record)
+      console.log(
+        `\x1b[33m Message received from SQS! ${JSON.stringify(record)} \x1b[0m`,
+      )
     }
   } catch (error) {
     console.error(error)
@@ -20,7 +22,7 @@ export const events = async (records: any): Promise<HttpResponse> => {
 
 export const create = async (data: any): Promise<HttpResponse> => {
   const { body } = data
-  console.log('Lambda ')
+  console.log('\x1b[33m Event Create! \x1b[0m')
   await enqueue(body)
 
   return success()
