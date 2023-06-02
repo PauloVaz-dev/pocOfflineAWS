@@ -1,9 +1,14 @@
 ### O projeto tem o intuito de simular os serviços da AWS SQS, Dynamo, S3, RDS, Redis com uso do framework serverless. Minimizando os custos e aumentando produtividade.
 
 ```bash
- #Subir os containers
+
+# Criar a rede para o container
+docker network create --driver=bridge --subnet=192.168.10.0/24 br0
+
+#Subir os containers
 cd docker
 docker-compose up 
+
 
 #Validar se containers estão funcionado
 docker ps 
