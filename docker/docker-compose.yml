@@ -50,4 +50,8 @@ volumes:
     driver: local
   cache:
     driver: local
+
+networks:
+  offline-local:
+    driver: bridge
   

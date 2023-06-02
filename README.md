@@ -13,6 +13,8 @@ docker stats
 
 #Criar as credenciais
 aws configure --profile default
+AWS Access Key ID [****************ocal]: local
+AWS Secret Access Key [****************ocal]: locallocal
 
 #Validar 
 cat ~/.aws/credentials
@@ -67,6 +69,15 @@ aws --endpoint-url=http://127.0.0.1:9000 s3 rm s3://mybucket/package.json
 
 ```
 
+### Libs necessárias:
+```bash
+serverless-offline-s3
+serverless-offline-sqs
+serverless-offline-dynamodb-streams
+
+npm i -D serverless-offline-s3 serverless-offline-sqs serverless-offline-dynamodb-streams
+```
+
 ## Rodando o serverless offline
 ```bash
 npx sls offline start --stage local --config serverless-local.yml 
@@ -119,3 +130,4 @@ aws dynamodb put-item --endpoint-url=http://127.0.0.1:8000 --table-name schedule
 
 https://dev.to/aws-builders/new-dynamodb-streams-filtering-in-serverless-framework-3lc5
 https://linuxhint.com/dynamodb-cli-commands/
+https://github.com/mj1618/serverless-offline-sns

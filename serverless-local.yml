@@ -1,4 +1,4 @@
-service: messaging-schedule-service
+service: aws-offline-docker
 frameworkVersion: "3"
 useDotenv: true
 provider:
@@ -8,7 +8,7 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: sa-east-1
   stackName: mensageria
-  apiName: "[MIDWAY] Messages - Schedule"
+  apiName: "aws-offline-docker"
   accountId: "000000000000"
 
 plugins:
@@ -23,42 +23,6 @@ plugins:
 
 package:
   excludeDevDependencies: true
-
-resources:
-  Resources:
-    LocalBucket:
-      Type: AWS::S3::Bucket
-      Properties:
-        BucketName: local-bucket
-
-    SqsMessagingScheduleEvent:
-      Type: AWS::SQS::Queue
-      Properties:
-        QueueName: ${env:SQS_MESSAGING_SCHEDULE_EVENT}
-
-    DynamoTableScheduleEventsJobs:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: 'schedule-events-jobs-ttl'
-        StreamSpecification:
-          StreamViewType: OLD_IMAGE
-        AttributeDefinitions:
-          - AttributeName: id
-            AttributeType: S
-        KeySchema:
-          - AttributeName: id
-            KeyType: HASH
-        TimeToLiveSpecification:
-          AttributeName: ttl
-          Enabled: true
-        BillingMode: PAY_PER_REQUEST
-
-    MensageriaScheduleCsvs:
-      Type: AWS::S3::Bucket
-      Properties:
-        BucketName: ${env:S3_BUCKET_FILE_CSV}
-    GatewayResponseBadRequestBody:
-      ${file(.serverless-configuration/resources/responses/bad-request.yml)}
 
 custom:
   
@@ -131,6 +95,8 @@ functions:
           enabled: true
           type: dynamodb
           tableName: schedule-events-jobs-ttl
+          filterPatterns:
+            - eventName: [REMOVE]
   
   rdsCreate:
     handler: src/handler/rdsHandler.create
