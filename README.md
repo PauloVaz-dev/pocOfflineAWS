@@ -24,7 +24,7 @@ export AWS_PROFILE=default
 
 #Criar tablela
 aws dynamodb --endpoint-url http://127.0.0.1:8000 create-table \
-        --table-name schedule-events-jobs-ttl \
+        --table-name my-dynamo \
 	--stream-specification StreamEnabled=true,StreamViewType=OLD_IMAGE \
         --attribute-definitions AttributeName=id,AttributeType=S \
         --key-schema AttributeName=id,KeyType=HASH \
@@ -33,39 +33,39 @@ aws dynamodb --endpoint-url http://127.0.0.1:8000 create-table \
 	--region sa-east-1
 
 #Ativo o ttl   
-aws dynamodb --endpoint-url=http://127.0.0.1:8000 update-time-to-live --table-name schedule-events-jobs-ttl --time-to-live-specification Enabled=true,AttributeName=ttl --profile default
+aws dynamodb --endpoint-url=http://127.0.0.1:8000 update-time-to-live --table-name my-dynamo --time-to-live-specification Enabled=true,AttributeName=ttl --profile default
 
 #Listar tabelas
 aws dynamodb --endpoint-url=http://127.0.0.1:8000 list-tables
 
 #Listar se tem registros
-aws dynamodb --endpoint-url=http://127.0.0.1:8000  scan --table-name schedule-events-jobs-ttl
+aws dynamodb --endpoint-url=http://127.0.0.1:8000  scan --table-name my-dynamo
 
 #Deletar table
 aws dynamodb --endpoint-url=http://127.0.0.1:8000 delete-table \
-         --table-name schedule-events-jobs-ttl
+         --table-name my-dynamo
 
 #Criar queues
 aws sqs --endpoint-url=http://127.0.0.1:9324 create-queue \
-            --queue-name messaging-schedule-events 
+            --queue-name my-sqs 
 
 #Listar a queues
 aws --endpoint-url=http://127.0.0.1:9324 sqs list-queues
 
 # Create bucket
-aws --endpoint-url=http://127.0.0.1:9000 s3api create-bucket --bucket mensageria-schedule-csv
+aws --endpoint-url=http://127.0.0.1:9000 s3api create-bucket --bucket my-bucket
 
 # List buckets
 aws --endpoint-url=http://127.0.0.1:9000 s3api list-buckets
 
 # List bucket files
-aws --endpoint-url=http://127.0.0.1:9000 s3 ls s3://mybucket
+aws --endpoint-url=http://127.0.0.1:9000 s3 ls s3://my-bucket
 
 # Copy local object to bucket
-aws --endpoint-url=http://127.0.0.1:9000 s3 cp package.json s3://mybucket/
+aws --endpoint-url=http://127.0.0.1:9000 s3 cp package.json s3://my-bucket/
 
 #Remover
-aws --endpoint-url=http://127.0.0.1:9000 s3 rm s3://mybucket/package.json
+aws --endpoint-url=http://127.0.0.1:9000 s3 rm s3://my-bucket/package.json
 
 ```
 
