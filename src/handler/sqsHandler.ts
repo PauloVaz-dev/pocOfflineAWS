@@ -5,7 +5,7 @@ import { SendMessageCommand } from '@aws-sdk/client-sqs'
 import { sqsClient } from '../commons/aws'
 
 export const events = async (records: any): Promise<HttpResponse> => {
-  console.log('Lambda events create-schedule')
+  console.log('Lambda events ')
   try {
     for (const { body } of records.Records) {
       const record = JSON.parse(body)
@@ -20,7 +20,7 @@ export const events = async (records: any): Promise<HttpResponse> => {
 
 export const create = async (data: any): Promise<HttpResponse> => {
   const { body } = data
-  console.log('Lambda create-schedule')
+  console.log('Lambda ')
   await enqueue(body)
 
   return success()
@@ -28,7 +28,7 @@ export const create = async (data: any): Promise<HttpResponse> => {
 
 const enqueue = async (data: any): Promise<void> => {
   const command = new SendMessageCommand({
-    QueueUrl: 'http://localhost:9324/queue/messaging-schedule-events',
+    QueueUrl: 'http://localhost:9324/queue/my-sqs',
     MessageBody: JSON.stringify(data),
   })
   await sqsClient.send(command)

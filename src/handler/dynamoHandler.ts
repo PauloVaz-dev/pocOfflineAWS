@@ -19,7 +19,7 @@ const put = async (data: any): Promise<void> => {
   try {
     await dynamoDbClient
       .put({
-        TableName: String(process.env.DYNAMO_SCHEDULE_TABLE),
+        TableName: 'my-dynamo',
         Item: data,
       })
       .promise()
