@@ -90,12 +90,12 @@ npx sls offline start --stage local --config serverless-local.yml
 
 ## Simulando um envio de arquivo para o S3
 ```bash
-aws --endpoint-url=http://127.0.0.1:9000 s3 cp package.json s3://mybucket/
+aws --endpoint-url=http://127.0.0.1:9000 s3 cp package.json s3://my-bucket/
 ```
 
 ## Simulando a remoção de um arquivo no S3
 ```bash
-aws --endpoint-url=http://127.0.0.1:9000 rm cp package.json s3://mybucket/
+aws --endpoint-url=http://127.0.0.1:9000 rm cp package.json s3://my-bucket/
 ```
 
 ## Simulando o envio de uma mensagem para o sqs via cli
