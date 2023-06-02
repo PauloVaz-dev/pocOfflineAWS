@@ -101,7 +101,7 @@ aws --endpoint-url=http://127.0.0.1:9000 rm cp package.json s3://mybucket/
 ## Simulando o envio de uma mensagem para o sqs via cli
 ```bash
 aws sqs send-message --endpoint-url=http://127.0.0.1:9324 \
-         --queue-url http://127.0.0.1:9324/000000000000/messaging-schedule-events \
+         --queue-url http://127.0.0.1:9324/000000000000/my-sqs \
          --message-body '{"solicitationId":"28224157-e580-4396-ac58-1b681a3cf517"}'
 ```
 
