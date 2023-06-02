@@ -115,7 +115,7 @@ aws dynamodb put-item --endpoint-url=http://127.0.0.1:8000 --table-name schedule
 ```
 
 
-### DOCs
+### Links
 
 https://dev.to/aws-builders/new-dynamodb-streams-filtering-in-serverless-framework-3lc5
 https://linuxhint.com/dynamodb-cli-commands/
